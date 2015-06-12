@@ -63,10 +63,10 @@ void setup()
 	LCD.clear();
 	LCD.home();
 
+        base_speed = menuItems[0].Value;
         pro_gain = menuItems[1].Value;
         diff_gain = menuItems[2].Value;
         int_gain = menuItems[3].Value;
-        base_speed = menuItems[0].Value;
         threshold = menuItems[4].Value;
         
       	LCD.print("Press Start");
@@ -82,10 +82,10 @@ void loop()
           motor.speed(RIGHT_MOTOR, 0);
 	  Menu();
           // Set values after exiting menu
+          base_speed = menuItems[0].Value;
           pro_gain = menuItems[1].Value;
           diff_gain = menuItems[2].Value;
           int_gain = menuItems[3].Value;
-          base_speed = menuItems[0].Value;
           threshold = menuItems[4].Value;
           // Restart motors
           motor.speed(LEFT_MOTOR, base_speed);
@@ -134,9 +134,11 @@ void loop()
         if( count == 100 ){
           count = 0;
           LCD.clear(); LCD.home();
-      	  LCD.print("L. QRD: "); LCD.print(left_sensor);
+      	  LCD.print("LQ:"); LCD.print(left_sensor);
+          LCD.print(" LM:"); LCD.print(base_speed + net_error);
           LCD.setCursor(0, 1);
-      	  LCD.print("R. QRD: ");LCD.print(right_sensor);
+      	  LCD.print("RQ:");LCD.print(right_sensor);
+          LCD.print(" RM:"); LCD.print(base_speed - net_error);
         }
         
         last_error = error;
