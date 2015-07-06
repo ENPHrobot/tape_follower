@@ -155,49 +155,42 @@ void Menu()
 	while (true)
 	{
 		/* Show MenuItem value and knob value */
-		int menuIndex = knob(6) * (MenuItem::MenuItemCount) / 1024;
+		int menuIndex = knob(6) * (MenuItem::MenuItemCount) >> 10;
 		LCD.clear(); LCD.home();
 		LCD.print(menuItems[menuIndex].Name); LCD.print(" "); LCD.print(menuItems[menuIndex].Value);
 		LCD.setCursor(0, 1);
-		LCD.print("Set to "); LCD.print(knob(7)); LCD.print("?");
+		LCD.print("Set to "); LCD.print(menuIndex != 0 ? knob(7) : knob(7) >> 2); LCD.print("?");
 		delay(100);
  
 		/* Press start button to save the new value */
 		if (startbutton())
 		{
 			delay(100);
-			if (startbutton())
-			{
-                            int val = knob(7); // cache knob value to memory
-                            
-                            // Limit speed to 700
-                            if (menuIndex == 0) {
-                                if (val > 700){
-                                  val = 700;
-                                  LCD.clear(); LCD.home();
-                                  LCD.print("Can't set speed over 700");
-                                  LCD.setCursor(0,1);
-                                  LCD.print("Speed set to 700");
-                                  delay(300);
-                                }
-                            }
-				menuItems[menuIndex].Value = val;
-				menuItems[menuIndex].Save();
-				delay(250);
+      int val = knob(7); // cache knob value to memory
+      // Limit speed to 700
+      if (menuIndex == 0) {
+        val = val >> 2;
+        LCD.clear(); LCD.home();
+        LCD.print("Speed set to "); LCD.print(val);
+        delay(250);
+      }
 
-			}
+			menuItems[menuIndex].Value = val;
+			menuItems[menuIndex].Save();
+			delay(250);
 		}
- 
+		
+
 		/* Press stop button to exit menu */
 		if (stopbutton())
 		{
 			delay(100);
 			if (stopbutton())
 			{
-      			  LCD.clear(); LCD.home();
-      			  LCD.print("Leaving menu");
-      			  delay(500);
-      			  return;
+			  LCD.clear(); LCD.home();
+			  LCD.print("Leaving menu");
+			  delay(500);
+			  return;
 			}
 		}
 	}
